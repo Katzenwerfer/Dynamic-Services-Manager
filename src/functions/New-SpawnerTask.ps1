@@ -1,3 +1,8 @@
+if (-not (Get-Command -Name Compress-ScriptBlock -ErrorAction SilentlyContinue)) {
+    $PSMinifierPath = Join-Path -Path $PSScriptRoot -ChildPath '..\submodules\PSMinifier\PSMinifier.psd1'
+    Import-Module -Name $PSMinifierPath -ErrorAction Stop
+}
+
 function New-SpawnerTask {
     param(
         [Parameter(Mandatory)]
