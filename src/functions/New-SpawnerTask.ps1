@@ -38,7 +38,8 @@ function New-SpawnerTask {
     $ActionProcess = '"C:\Program Files\PowerShell\7\pwsh.exe"'
 
     $ScriptContent = Get-Content -Path $ScriptPath -Raw
-    $UnicodeBytes = [System.Text.Encoding]::Unicode.GetBytes($ScriptContent)
+    $MinifiedContent = Compress-ScriptBlock -ScriptBlock ([ScriptBlock]::Create($ScriptContent))
+    $UnicodeBytes = [System.Text.Encoding]::Unicode.GetBytes($MinifiedContent)
     $EncodedCommand = [System.Convert]::ToBase64String($UnicodeBytes)
     $ActionParameters = "-ExecutionPolicy Bypass -NoLogo -NonInteractive -NoProfile -WindowStyle Hidden -EncodedCommand `"$EncodedCommand`""
 
