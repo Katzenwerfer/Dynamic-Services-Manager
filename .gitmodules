@@ -1,0 +1,3 @@
+[submodule "src/submodules/PSMinifier"]
+	path = src/submodules/PSMinifier
+	url = https://github.com/StartAutomating/PSMinifier.git
