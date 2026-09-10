@@ -16,8 +16,9 @@ if (-not (Get-Command -Name New-KillerTask -ErrorAction SilentlyContinue)) {
 }
 
 $parameters = @{
-    ProcessPath = 'C:\Program Files\Cloudflare\Cloudflare WARP\Cloudflare WARP.exe'
-    ScriptPath  = Join-Path -Path $PSScriptRoot -ChildPath 'killer.ps1' -Resolve
+    ProcessPath  = 'C:\Program Files\Cloudflare\Cloudflare WARP\Cloudflare WARP.exe'
+    ScriptPath   = Join-Path -Path $PSScriptRoot -ChildPath 'killer.ps1' -Resolve
+    StopExisting = $true
 }
 
 New-KillerTask @parameters
