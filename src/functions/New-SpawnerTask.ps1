@@ -10,7 +10,8 @@ function New-SpawnerTask {
         [string]$ProcessPath,
         [Parameter(Mandatory)]
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
-        [string]$ScriptPath
+        [string]$ScriptPath,
+        [switch]$StopExisting
     )
 
     $ProcessName = (Get-ChildItem -Path $ProcessPath -Force).Name
@@ -55,6 +56,10 @@ function New-SpawnerTask {
     # -------------------------------
 
     $ScheduledTaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -StartWhenAvailable -DontStopIfGoingOnBatteries -MultipleInstances IgnoreNew
+
+    if ($StopExisting) {
+        $ScheduledTaskSettings.CimInstanceProperties.Item('MultipleInstances').Value = 3
+    }
 
     # ------------------------------
     # === Scheduled Task Trigger ===
