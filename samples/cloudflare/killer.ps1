@@ -35,16 +35,14 @@ if (-not $CloudflareProcess) {
     foreach ($ServiceName in $ServiceNames) {
         $Service = Get-Service -Name $ServiceName
 
-        $ServiceStartType = $Service.StartType
-
-        if ($ServiceStartType -ne 'Manual') {
-            $ServiceName | Set-Service -StartupType Manual
+        if ($Service.StartType -ne 'Manual') {
+            Set-Service -Name $ServiceName -StartupType Manual
         }
 
         $ServiceStatus = $Service.Status
 
         if ($ServiceStatus -eq 'Running') {
-            $Service | Stop-Service -Force
+            Stop-Service -Name $ServiceName -Force
         }
     }
 }
