@@ -21,6 +21,12 @@ if ($CloudflareProcess) {
 }
 
 if (-not $CloudflareProcess) {
+    $Task = Get-ScheduledTask -TaskName 'CloudflareWARPServiceRecovery'
+
+    if ($task.State -ne 'Disabled') {
+        Disable-ScheduledTask -TaskName 'CloudflareWARPServiceRecovery'
+    }
+
     $ServiceNames = @(
         'CloudflareWARP',
         'CloudflareWARPUpdater'
