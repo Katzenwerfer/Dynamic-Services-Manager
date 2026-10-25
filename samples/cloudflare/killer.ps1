@@ -9,25 +9,36 @@ if ($SpawnerTask.State -eq 'Running') {
     $Stopwatch.Stop()
 }
 
-$ServiceNames = @(
-    'CloudflareWARP',
-    'CloudflareWARPUpdater'
-)
+$CloudflareProcess = Get-Process -Name 'Cloudflare WARP'
 
-Start-Sleep -Seconds 10
-
-foreach ($ServiceName in $ServiceNames) {
-    $Service = Get-Service -Name $ServiceName
-
-    $ServiceStartType = $Service.StartType
-
-    if ($ServiceStartType -ne 'Manual') {
-        $ServiceName | Set-Service -StartupType Manual
+if ($CloudflareProcess) {
+    $Stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+    while (($CloudflareProcess) -and ($Stopwatch.ElapsedMilliseconds -lt 3000)) {
+        [System.Threading.Thread]::Sleep(200)
+        $CloudflareProcess = Get-Process -Name 'Cloudflare WARP'
     }
+    $Stopwatch.Stop()
+}
 
-    $ServiceStatus = $Service.Status
+if (-not $CloudflareProcess) {
+    $ServiceNames = @(
+        'CloudflareWARP',
+        'CloudflareWARPUpdater'
+    )
 
-    if ($ServiceStatus -eq 'Running') {
-        $Service | Stop-Service -Force
+    foreach ($ServiceName in $ServiceNames) {
+        $Service = Get-Service -Name $ServiceName
+
+        $ServiceStartType = $Service.StartType
+
+        if ($ServiceStartType -ne 'Manual') {
+            $ServiceName | Set-Service -StartupType Manual
+        }
+
+        $ServiceStatus = $Service.Status
+
+        if ($ServiceStatus -eq 'Running') {
+            $Service | Stop-Service -Force
+        }
     }
 }
