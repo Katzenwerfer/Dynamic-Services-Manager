@@ -41,7 +41,7 @@ function New-SpawnerTask {
     # === Scheduled Task Action ===
     # -----------------------------
 
-    $ActionProcess = '"C:\Program Files\PowerShell\7\pwsh.exe"'
+    $ActionProcess = (Get-Command -Name 'pwsh.exe' -All).Source | Select-Object -Last 1
 
     $ScriptContent = Get-Content -Path $ScriptPath -Raw
     $MinifiedContent = Compress-ScriptBlock -ScriptBlock ([ScriptBlock]::Create($ScriptContent))
