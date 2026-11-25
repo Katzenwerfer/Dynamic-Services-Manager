@@ -41,7 +41,7 @@ function New-KillerTask {
     # === Scheduled Task Action ===
     # -----------------------------
 
-    $ActionProcess = (Get-Command -Name 'pwsh.exe' -All).Source | Select-Object -Last 1
+    $ActionProcess = '"C:\Program Files\PowerShell\7\pwsh.exe"'
 
     $ScriptContent = Get-Content -Path $ScriptPath -Raw
     $MinifiedContent = Compress-ScriptBlock -ScriptBlock ([ScriptBlock]::Create($ScriptContent))
