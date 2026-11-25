@@ -41,7 +41,18 @@ function New-SpawnerTask {
     # === Scheduled Task Action ===
     # -----------------------------
 
-    $ActionProcess = '"C:\Program Files\PowerShell\7\pwsh.exe"'
+    $CandidatePaths = @(
+        'C:\Program Files\PowerShell\7\pwsh.exe'
+        'C:\pwsh\pwsh.exe'
+    )
+
+    $PwshPath = $CandidatePaths | Where-Object { Test-Path -Path $_ -PathType Leaf } | Select-Object -First 1
+
+    if (-not $PwshPath) {
+        Write-Error -Message "Could not find pwsh.exe at any expected location ($($CandidatePaths -join ', '))." -ErrorAction Stop
+    }
+
+    $ActionProcess = "`"$PwshPath`""
 
     $ScriptContent = Get-Content -Path $ScriptPath -Raw
     $MinifiedContent = Compress-ScriptBlock -ScriptBlock ([ScriptBlock]::Create($ScriptContent))
